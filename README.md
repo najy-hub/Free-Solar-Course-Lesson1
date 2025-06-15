@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>رحلة المهندس المحترف - OVO</title>
+  <title>رحلة المهندس المحترف - OVO Funnel</title>
   <style>
     body {
       background-color: #111;
@@ -73,8 +73,8 @@
     ];
 
     let currentDay = 1;
-    const storedStart = localStorage.getItem("ovoStartDate");
     const debugDay = localStorage.getItem("debugDay");
+    const storedStart = localStorage.getItem("ovoStartDate");
 
     if (debugDay) {
       currentDay = parseInt(debugDay);
@@ -90,16 +90,19 @@
     }
 
     const container = document.getElementById("videos");
-
     const selectedVideo = videosData.find(v => v.day === currentDay);
+
     if (selectedVideo) {
       const section = document.createElement("div");
       section.className = "video-box";
 
-      // ✅ عرض العداد لليوم الرابع
       if (selectedVideo.day === 4) {
-        const offerStart = localStorage.getItem("offerStartTime") || new Date().toISOString();
-        localStorage.setItem("offerStartTime", offerStart);
+        let offerStart = localStorage.getItem("offerStartTime");
+
+        if (!offerStart) {
+          offerStart = new Date().toISOString();
+          localStorage.setItem("offerStartTime", offerStart);
+        }
 
         const countdown = document.createElement("div");
         countdown.id = "countdown";
@@ -109,8 +112,10 @@
         setInterval(() => updateCountdown(new Date(offerStart)), 1000);
       }
 
-      section.innerHTML += `<h2>${selectedVideo.title}</h2>
-        <iframe src="${selectedVideo.url}" allowfullscreen></iframe>`;
+      section.innerHTML += `
+        <h2>${selectedVideo.title}</h2>
+        <iframe src="${selectedVideo.url}" allowfullscreen></iframe>
+      `;
       container.appendChild(section);
     }
 
@@ -137,6 +142,7 @@
       if (day === 4) {
         localStorage.setItem("offerStartTime", new Date().toISOString());
       }
+
       location.reload();
     }
 
@@ -144,7 +150,7 @@
       localStorage.removeItem("ovoStartDate");
       localStorage.removeItem("debugDay");
       localStorage.removeItem("offerStartTime");
-      alert("✅ تم إعادة ضبط الوقت.");
+      alert("✅ تم إعادة ضبط البيانات.");
       location.reload();
     }
   </script>
