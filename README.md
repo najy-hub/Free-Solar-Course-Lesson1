@@ -144,5 +144,28 @@
   </script>
 
 </body>
+<button onclick="resetAll()" style="
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 15px;
+  font-size: 14px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 9999;
+">🔄 إعادة ضبط الوقت (اختبار)</button>
+
+<script>
+  function resetAll() {
+    localStorage.removeItem("ovoStartDate");
+    localStorage.removeItem("offerStartTime");
+    alert("✅ تم إعادة ضبط الوقت. أعد تحميل الصفحة لاختبار من البداية.");
+    location.reload();
+  }
+</script>
+
 </html>
 # Free-Solar-Course
