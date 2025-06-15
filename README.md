@@ -2,18 +2,19 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>رحلة المهندس المحترف - OVO Funnel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سلسلة الفيديوهات - OVO</title>
   <style>
     body {
       background-color: #111;
       color: #fff;
       font-family: 'Cairo', sans-serif;
-      padding: 30px;
+      padding: 20px;
       max-width: 800px;
       margin: auto;
     }
-    h2 {
-      color: #ffba00;
+    h1, h2 {
+      text-align: center;
       margin-bottom: 20px;
     }
     .video-box {
@@ -22,138 +23,144 @@
     iframe {
       width: 100%;
       height: 400px;
-      border: none;
       border-radius: 12px;
+      border: none;
     }
-    #countdown {
+    .timer {
+      text-align: center;
       font-size: 20px;
       margin-bottom: 10px;
-      text-align: center;
-      color: #f00;
+      color: #ffba00;
     }
-    .debug {
-      background: #222;
+    .test-controls {
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .test-controls select, .test-controls button {
       padding: 10px;
-      margin: 30px 0;
-      border-radius: 8px;
-    }
-    .debug select, .debug button {
-      padding: 8px 12px;
-      margin-right: 10px;
-      border: none;
+      font-size: 16px;
       border-radius: 6px;
+      margin-left: 10px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🎓 دورة رحلة المهندس المحترف - OVO Funnel</h1>
+  <h1>🎓 سلسلة الفيديوهات التعليمية</h1>
 
-  <!-- ✅ وضع الاختبار -->
-  <div class="debug">
-    <label>🧪 اختبار يوم:</label>
-    <select id="daySelector">
+  <div class="test-controls">
+    <label>🧪 وضع الاختبار:</label>
+    <select id="testDay">
+      <option value="0">اختر اليوم</option>
       <option value="1">اليوم الأول</option>
       <option value="2">اليوم الثاني</option>
       <option value="3">اليوم الثالث</option>
-      <option value="4">اليوم الرابع (عرض)</option>
+      <option value="4">اليوم الرابع (العرض)</option>
     </select>
-    <button onclick="setTestDay()">تفعيل الاختبار</button>
-    <button onclick="resetAll()">إعادة التهيئة</button>
+    <button onclick="activateTestMode()">تفعيل الاختبار</button>
+    <button onclick="disableTestMode()">إلغاء</button>
   </div>
 
-  <div id="videos"></div>
+  <div id="videosContainer"></div>
 
   <script>
-    const videosData = [
-      { day: 1, title: "📘 فيديو اليوم الأول", url: "https://www.youtube.com/embed/VIDEO_ID_1" },
-      { day: 2, title: "📗 فيديو اليوم الثاني", url: "https://www.youtube.com/embed/VIDEO_ID_2" },
-      { day: 3, title: "📙 فيديو اليوم الثالث", url: "https://www.youtube.com/embed/VIDEO_ID_3" },
-      { day: 4, title: "🎯 فيديو العرض", url: "https://www.youtube.com/embed/OFFER_VIDEO_ID" },
+    const videos = [
+      { day: 1, title: "📘 الفيديو الأول", url: "https://www.youtube.com/embed/YOUR_VIDEO_1" },
+      { day: 2, title: "📗 الفيديو الثاني", url: "https://www.youtube.com/embed/YOUR_VIDEO_2" },
+      { day: 3, title: "📙 الفيديو الثالث", url: "https://www.youtube.com/embed/YOUR_VIDEO_3" },
+      { day: 4, title: "🎯 فيديو العرض", url: "https://www.youtube.com/embed/YOUR_OFFER_VIDEO" }
     ];
 
-    let currentDay = 1;
-    const debugDay = localStorage.getItem("debugDay");
-    const storedStart = localStorage.getItem("ovoStartDate");
+    let testMode = false;
+    let testDay = 0;
 
-    if (debugDay) {
-      currentDay = parseInt(debugDay);
-    } else if (storedStart) {
-      const startDate = new Date(storedStart);
-      const now = new Date();
-      const diff = Math.floor((now - startDate) / (1000 * 60 * 60 * 24)) + 1;
-      currentDay = Math.min(diff, 4);
-    } else {
-      const today = new Date();
-      localStorage.setItem("ovoStartDate", today.toISOString());
-      currentDay = 1;
+    function getUserDay() {
+      const start = localStorage.getItem("ovoStartDate");
+      if (!start) {
+        const today = new Date();
+        localStorage.setItem("ovoStartDate", today.toISOString());
+        return 1;
+      }
+      const startDate = new Date(start);
+      const diff = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24));
+      return Math.min(diff + 1, 4);
     }
 
-    const container = document.getElementById("videos");
-    const selectedVideo = videosData.find(v => v.day === currentDay);
+    function activateTestMode() {
+      testDay = parseInt(document.getElementById("testDay").value);
+      if (testDay > 0 && testDay <= 4) {
+        testMode = true;
+        renderVideos();
+      }
+    }
 
-    if (selectedVideo) {
-      const section = document.createElement("div");
-      section.className = "video-box";
+    function disableTestMode() {
+      testMode = false;
+      testDay = 0;
+      renderVideos();
+    }
 
-      // ✅ اليوم الرابع مع الساعة
-      if (selectedVideo.day === 4) {
-        let offerStart = localStorage.getItem("offerStartTime");
+    function renderVideos() {
+      const container = document.getElementById("videosContainer");
+      container.innerHTML = "";
 
-        if (!offerStart) {
-          offerStart = new Date().toISOString();
-          localStorage.setItem("offerStartTime", offerStart);
+      const currentDay = testMode ? testDay : getUserDay();
+      const availableDays = testMode ? [currentDay] : Array.from({ length: currentDay }, (_, i) => i + 1);
+
+      videos.forEach(video => {
+        if (!availableDays.includes(video.day)) return;
+
+        const box = document.createElement("div");
+        box.className = "video-box";
+
+        if (video.day === 4) {
+          // عرض العد التنازلي
+          const timer = document.createElement("div");
+          timer.className = "timer";
+          timer.id = "offerTimer";
+          box.appendChild(timer);
+          startOfferTimer();
         }
 
-        const countdown = document.createElement("div");
-        countdown.id = "countdown";
-        section.appendChild(countdown);
+        box.innerHTML += `<h2>${video.title}</h2><iframe src="${video.url}" allowfullscreen></iframe>`;
+        container.appendChild(box);
+      });
+    }
 
-        updateCountdown(new Date(offerStart));
-        setInterval(() => updateCountdown(new Date(offerStart)), 1000);
+    function startOfferTimer() {
+      const offerKey = "offerVideoStart";
+      let offerStart = localStorage.getItem(offerKey);
+      if (!offerStart) {
+        offerStart = new Date().toISOString();
+        localStorage.setItem(offerKey, offerStart);
       }
 
-      section.insertAdjacentHTML("beforeend", `
-        <h2>${selectedVideo.title}</h2>
-        <iframe src="${selectedVideo.url}" allowfullscreen></iframe>
-      `);
-      container.appendChild(section);
-    }
+      function updateCountdown() {
+        const now = new Date();
+        const start = new Date(offerStart);
+        const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+        const diff = end - now;
 
-    function updateCountdown(startTime) {
-      const now = new Date();
-      const end = new Date(startTime.getTime() + 24 * 60 * 60 * 1000);
-      const diff = end - now;
+        if (diff <= 0) {
+          document.getElementById("offerTimer").innerText = "⏰ انتهى الوقت!";
+          return;
+        }
 
-      const cd = document.getElementById("countdown");
-      if (diff <= 0) {
-        cd.innerText = "⏰ انتهى الوقت!";
-      } else {
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diff % (1000 * 60)) / 1000);
-        cd.innerText = `⏳ ينتهي العرض خلال: ${hours} ساعة، ${mins} دقيقة، ${secs} ثانية`;
-      }
-    }
+        const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
+        const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, "0");
+        const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, "0");
 
-    function setTestDay() {
-      const day = parseInt(document.getElementById("daySelector").value);
-      localStorage.setItem("debugDay", day);
-
-      if (day === 4) {
-        localStorage.setItem("offerStartTime", new Date().toISOString());
+        document.getElementById("offerTimer").innerText = `⌛ ينتهي خلال: ${hours}:${minutes}:${seconds}`;
+        setTimeout(updateCountdown, 1000);
       }
 
-      location.reload();
+      updateCountdown();
     }
 
-    function resetAll() {
-      localStorage.removeItem("ovoStartDate");
-      localStorage.removeItem("debugDay");
-      localStorage.removeItem("offerStartTime");
-      alert("✅ تم إعادة ضبط البيانات.");
-      location.reload();
-    }
+    // تشغيل عند التحميل
+    renderVideos();
   </script>
 
 </body>
