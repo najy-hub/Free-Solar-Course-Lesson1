@@ -96,6 +96,7 @@
       const section = document.createElement("div");
       section.className = "video-box";
 
+      // ✅ اليوم الرابع مع الساعة
       if (selectedVideo.day === 4) {
         let offerStart = localStorage.getItem("offerStartTime");
 
@@ -112,10 +113,10 @@
         setInterval(() => updateCountdown(new Date(offerStart)), 1000);
       }
 
-      section.innerHTML += `
+      section.insertAdjacentHTML("beforeend", `
         <h2>${selectedVideo.title}</h2>
         <iframe src="${selectedVideo.url}" allowfullscreen></iframe>
-      `;
+      `);
       container.appendChild(section);
     }
 
