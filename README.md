@@ -116,7 +116,7 @@
         box.className = "video-box";
 
         if (video.day === 4) {
-          // عرض العد التنازلي
+          // عرض العداد الزمني لليوم الرابع
           const timer = document.createElement("div");
           timer.className = "timer";
           timer.id = "offerTimer";
@@ -132,7 +132,11 @@
     function startOfferTimer() {
       const offerKey = "offerVideoStart";
       let offerStart = localStorage.getItem(offerKey);
-      if (!offerStart) {
+
+      // في وضع الاختبار، نستخدم وقت جديد كل مرة
+      if (testMode) {
+        offerStart = new Date().toISOString();
+      } else if (!offerStart) {
         offerStart = new Date().toISOString();
         localStorage.setItem(offerKey, offerStart);
       }
@@ -159,7 +163,7 @@
       updateCountdown();
     }
 
-    // تشغيل عند التحميل
+    // بدء العرض
     renderVideos();
   </script>
 
