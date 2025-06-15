@@ -91,29 +91,28 @@
 
     const container = document.getElementById("videos");
 
-    videosData.forEach(v => {
-      if (v.day === currentDay) {
-        const section = document.createElement("div");
-        section.className = "video-box";
+    const selectedVideo = videosData.find(v => v.day === currentDay);
+    if (selectedVideo) {
+      const section = document.createElement("div");
+      section.className = "video-box";
 
-        // ✅ عرض العداد لليوم الرابع
-        if (v.day === 4) {
-          const offerStart = localStorage.getItem("offerStartTime") || new Date().toISOString();
-          localStorage.setItem("offerStartTime", offerStart);
+      // ✅ عرض العداد لليوم الرابع
+      if (selectedVideo.day === 4) {
+        const offerStart = localStorage.getItem("offerStartTime") || new Date().toISOString();
+        localStorage.setItem("offerStartTime", offerStart);
 
-          const countdown = document.createElement("div");
-          countdown.id = "countdown";
-          section.appendChild(countdown);
+        const countdown = document.createElement("div");
+        countdown.id = "countdown";
+        section.appendChild(countdown);
 
-          updateCountdown(new Date(offerStart));
-          setInterval(() => updateCountdown(new Date(offerStart)), 1000);
-        }
-
-        section.innerHTML += `<h2>${v.title}</h2>
-          <iframe src="${v.url}" allowfullscreen></iframe>`;
-        container.appendChild(section);
+        updateCountdown(new Date(offerStart));
+        setInterval(() => updateCountdown(new Date(offerStart)), 1000);
       }
-    });
+
+      section.innerHTML += `<h2>${selectedVideo.title}</h2>
+        <iframe src="${selectedVideo.url}" allowfullscreen></iframe>`;
+      container.appendChild(section);
+    }
 
     function updateCountdown(startTime) {
       const now = new Date();
