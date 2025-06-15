@@ -143,22 +143,27 @@
     }
   </script>
 
-</body>
-<button onclick="resetAll()" style="
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
-  background: red;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  z-index: 9999;
-">🔄 إعادة ضبط الوقت (اختبار)</button>
+</body><div style="position: fixed; bottom: 20px; right: 20px; background: #222; padding: 10px; border-radius: 8px; z-index: 9999;">
+  <strong style="color:#ffba00;">🧪 وضع الاختبار:</strong><br>
+  <button onclick="simulateDay(1)">يوم 1</button>
+  <button onclick="simulateDay(2)">يوم 2</button>
+  <button onclick="simulateDay(3)">يوم 3</button>
+  <button onclick="simulateDay(4)">يوم 4 (عرض العرض)</button>
+  <button onclick="resetAll()" style="background:red; color:white;">إعادة التهيئة</button>
+</div>
 
 <script>
+  function simulateDay(day) {
+    const today = new Date();
+    const fakeStart = new Date();
+    fakeStart.setDate(today.getDate() - (day - 1));
+    localStorage.setItem("ovoStartDate", fakeStart.toISOString());
+    if (day === 4) {
+      localStorage.setItem("offerStartTime", new Date().toISOString());
+    }
+    location.reload();
+  }
+
   function resetAll() {
     localStorage.removeItem("ovoStartDate");
     localStorage.removeItem("offerStartTime");
@@ -166,6 +171,7 @@
     location.reload();
   }
 </script>
+
 
 </html>
 # Free-Solar-Course
