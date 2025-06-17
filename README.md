@@ -177,7 +177,7 @@
   </footer>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycby3WcuXOblJAmygxP84x707jO7B5f04ru2wILg8n1ax_9T4oZD4J05mDNbqIq-F45DK3A/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyAcciCCCjlL_9pw72udHFVYMtioWp2GWTRBCsWNUekFz3ih8tkmiirtS8q5G6NBAYU/exec";
     const adminEmail = "najycosa238@gmail.com"; // ← استبدله ببريدك (مستقبلاً يمكن تطويره لتسجيل دخول)
 
     document.getElementById("commentForm").addEventListener("submit", function(e) {
