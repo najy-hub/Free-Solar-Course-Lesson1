@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>رحلة المهندس المحترف</title>
+  <title>أنظمة التخزين</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
@@ -137,12 +137,12 @@
     <div class="hero-content">
       <h2>رحلتك تبدأ من هنا</h2>
       <p>دورة متكاملة لتعلم تصميم وتنفيذ أنظمة الطاقة الشمسية بطرق عملية وعلمية.</p>
-      <a href="#video" class="button">شاهد المقدمة</a>
+      <a href="#video" class="button">شــاهد المحاضرة</a>
     </div>
   </section>
 
   <section id="video">
-    <h2 style="margin-bottom: 20px;">🎥 المحاضرة</h2>
+    <h2 style="margin-bottom: 20px;">🎥 أنظمــة التخزين</h2>
     <iframe width="800" height="450"
       src="https://www.youtube.com/embed/zW9ZX-SZKtE"
       frameborder="0" allowfullscreen></iframe>
